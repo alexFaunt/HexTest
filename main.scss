@@ -1,0 +1,93 @@
+$hex-padding: 3%;
+$hex-height-ratio: 0.85;
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  padding: 0;
+  margin: 0;
+}
+
+@for $i from 1 through 10 {
+  // The row consists of half as many hexes
+  $hex-per-row: (($i + 1) / 2);
+
+  // 4x + 3x/2
+  // 11x/2 = 100%
+  // x = (100 * 2) / 11
+  // x = 200 / ((i*2 + (i-1))
+  $hex-width: 200% / (($hex-per-row*2) + ($hex-per-row - 1));
+
+  .hex-cols-#{$i} {
+    .hex {
+      width: $hex-width;
+      margin-left: $hex-width/2;
+
+      &:first-child {
+        margin-left: 0;
+      }
+    }
+
+    .row:nth-child(2n) {
+      width: 100%;
+      position: absolute;
+      transform: translate3d($hex-width * 0.75, -50%, 0);
+    }
+  }
+
+  .hex-rows-even {
+    padding-bottom: $hex-width/2 * $hex-height-ratio;
+  }
+
+  .hex-triangle {
+    padding: $hex-width 0;
+  }
+}
+
+.row {
+
+  &::after {
+    content: '';
+    display: table;
+    clear: both;
+  }
+}
+
+@keyframes hue-rotate {
+  to {
+    -webkit-filter: hue-rotate(360deg);
+  }
+}
+.hex {
+  background: bisque;
+  display: block;
+  float: left;
+  -webkit-clip-path: polygon(25% $hex-padding, 75% $hex-padding, (100% - $hex-padding) 50%, 75% (100% - $hex-padding), 25% (100% - $hex-padding), $hex-padding 50%);
+
+  &::after {
+    content: '';
+    display: block;
+    padding-bottom: 100% * $hex-height-ratio;
+  }
+}
+
+.hex-grid {
+  background: teal;
+}
+
+.hex-triangle {
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    background: conic-gradient(transparent 240.5deg, #f06 0 299.5deg, transparent 0); // TODO - this should be worked out via trig
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 164%; // TODO - variable this
+  }
+}
